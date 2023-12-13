@@ -1,0 +1,7 @@
+name: spcs-hol
+channels:
+  - https://repo.anaconda.com/pkgs/snowflake
+dependencies:
+  - python=3.10
+  - snowflake-snowpark-python[pandas]
+  - ipykernel

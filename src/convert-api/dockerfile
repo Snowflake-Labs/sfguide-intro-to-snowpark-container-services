@@ -1,0 +1,15 @@
+FROM python:3.11
+
+# Copy the packages file into the build
+WORKDIR /app
+COPY ./ /app/
+
+# run the install using the packages manifest file
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Open port 9090
+EXPOSE 9090
+
+# When the container launches run the flask app
+ENV FLASK_APP="convert-app.py"
+CMD ["flask", "run", "--host=0.0.0.0", "--port=9090"]

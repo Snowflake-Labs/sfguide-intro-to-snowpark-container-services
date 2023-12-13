@@ -1,0 +1,18 @@
+spec:
+  containers:
+    - name: jupyter-snowpark
+      image: <repository_hostname>/container_hol_db/public/image_repo/python-jupyter-snowpark:dev
+      volumeMounts:
+        - name: jupyter-home
+          mountPath: /home/jupyter
+  endpoints:
+    - name: jupyter-snowpark
+      port: 8888
+      public: true
+  volumes:
+    - name: jupyter-home
+      source: "@volumes/jupyter-snowpark"
+      uid: 1000
+      gid: 1000
+  networkPolicyConfig:
+      allowInternetEgress: true
