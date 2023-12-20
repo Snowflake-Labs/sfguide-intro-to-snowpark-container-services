@@ -1,4 +1,4 @@
-name: spcs-hol
+name: snowpark-container-services-hol
 channels:
   - https://repo.anaconda.com/pkgs/snowflake
 dependencies:
