@@ -1,7 +1,7 @@
 spec:
   containers:
     - name: convert-api
-      image: <repository_hostname>/container_hol_db/public/image_repo/convert-api:dev
+      image: sfsenorthamerica-container-recording.registry.snowflakecomputing.com/container_hol_db/public/image_repo/convert-api:dev
   endpoints:
     - name: convert-api
       port: 9090

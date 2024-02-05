@@ -1,7 +1,7 @@
 spec:
   containers:
     - name: jupyter-snowpark
-      image: <repository_hostname>/container_hol_db/public/image_repo/python-jupyter-snowpark:dev
+      image: sfsenorthamerica-container-recording.registry.snowflakecomputing.com/container_hol_db/public/image_repo/python-jupyter-snowpark:dev
       volumeMounts:
         - name: jupyter-home
           mountPath: /home/jupyter

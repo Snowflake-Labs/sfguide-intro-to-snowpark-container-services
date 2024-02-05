@@ -6,7 +6,8 @@ USE WAREHOUSE CONTAINER_HOL_WH;
 create service CONTAINER_HOL_DB.PUBLIC.CONVERT_API
 in compute pool CONTAINER_HOL_POOL
 from @specs
-spec='convert-api.yaml';
+specification_file='convert-api.yaml'
+external_access_integrations = (ALLOW_ALL_EAI);
 
 CALL SYSTEM$GET_SERVICE_STATUS('CONTAINER_HOL_DB.PUBLIC.CONVERT_API');
 CALL SYSTEM$GET_SERVICE_LOGS('CONTAINER_HOL_DB.PUBLIC.CONVERT_API', '0', 'convert-api',10);

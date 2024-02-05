@@ -5,7 +5,8 @@ USE WAREHOUSE CONTAINER_HOL_WH;
 create service CONTAINER_HOL_DB.PUBLIC.JUPYTER_SNOWPARK_SERVICE
 in compute pool CONTAINER_HOL_POOL
 from @specs
-spec='jupyter-snowpark.yaml';
+specification_file='jupyter-snowpark.yaml'
+external_access_integrations = (ALLOW_ALL_EAI);
 
 CALL SYSTEM$GET_SERVICE_STATUS('CONTAINER_HOL_DB.PUBLIC.jupyter_snowpark_service');
 CALL SYSTEM$GET_SERVICE_LOGS('CONTAINER_HOL_DB.PUBLIC.JUPYTER_SNOWPARK_SERVICE', '0', 'jupyter-snowpark',10);
