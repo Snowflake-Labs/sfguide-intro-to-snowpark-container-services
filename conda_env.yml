@@ -5,3 +5,7 @@ dependencies:
   - python=3.10
   - snowflake-snowpark-python[pandas]
   - ipykernel
+  - pip
+  - pip:
+    - snowflake
+    - snowflake-cli-labs==2.0.0rc1
