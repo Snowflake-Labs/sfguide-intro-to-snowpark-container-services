@@ -45,7 +45,9 @@ try:
     print(logs)
 
     # SHOW ENDPOINTS IN SERVICE JUPYTER_SNOWPARK_SERVICE;
-    # Not supported in Python API
+    endpoints = s.get_endpoints()
+    for endpoint in endpoints:
+        print(endpoint)
 
     # --- After we make a change to our Jupyter notebook,
     # --- we will suspend and resume the service
