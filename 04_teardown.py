@@ -3,11 +3,6 @@ import os
 
 from snowflake.core import Root
 
-from snowflake.core.compute_pool import ComputePool, ComputePoolResource
-from snowflake.core.image_repository import ImageRepository
-from snowflake.core.service import Service
-
-from snowflake.core.warehouse import Warehouse
 from snowflake.core.stage import Stage
 
 from snowflake.core.grants import (
@@ -19,7 +14,6 @@ from snowflake.core.grants import (
     Securables,
     User,
 )
-from snowflake.core.database import Database
 
 from snowflake.connector import connect
 
@@ -33,7 +27,7 @@ CONNECTION_PARAMETERS_ACCOUNT_ADMIN = {
     "role": "ACCOUNTADMIN",
 }
 
-CONNECTION_PARAMETERS_CONTAINER_USER_ROLE= {
+CONNECTION_PARAMETERS_CONTAINER_USER_ROLE = {
     "account": os.environ["snowflake_account"],
     "user": os.environ["snowflake_user"],
     "password": os.environ["snowflake_password"],

@@ -1,14 +1,13 @@
 #!/opt/conda/bin/python3
 import os
-from datetime import timedelta
 
 from snowflake.core import Root
-from snowflake.core.compute_pool import ComputePool, ComputePoolResource
+from snowflake.core.compute_pool import ComputePool
 from snowflake.core.image_repository import ImageRepository
 
 from snowflake.connector import connect
 
-CONNECTION_PARAMETERS_CONTAINER_USER_ROLE= {
+CONNECTION_PARAMETERS_CONTAINER_USER_ROLE = {
     "account": os.environ["snowflake_account"],
     "user": os.environ["snowflake_user"],
     "password": os.environ["snowflake_password"],
@@ -44,7 +43,7 @@ try:
     # SHOW IMAGE REPOSITORIES IN SCHEMA CONTAINER_HOL_DB.PUBLIC;
     itr_data = root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].image_repositories.iter()
     for image_repo in itr_data:
-      print(image_repo)
+        print(image_repo)
 
 finally:
     connection_container_user_role.close()

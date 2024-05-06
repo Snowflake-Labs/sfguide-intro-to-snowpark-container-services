@@ -3,12 +3,10 @@ import os
 
 from snowflake.core import Root
 from snowflake.core.service import Service, ServiceSpecStageFile
-from snowflake.core.service._generated.models.service_spec_inline_text import ServiceSpecInlineText
-
 
 from snowflake.connector import connect
 
-CONNECTION_PARAMETERS_CONTAINER_USER_ROLE= {
+CONNECTION_PARAMETERS_CONTAINER_USER_ROLE = {
     "account": os.environ["snowflake_account"],
     "user": os.environ["snowflake_user"],
     "password": os.environ["snowflake_password"],
@@ -43,13 +41,15 @@ try:
 
     # CALL SYSTEM$GET_SERVICE_LOGS('CONTAINER_HOL_DB.PUBLIC.JUPYTER_SNOWPARK_SERVICE', '0', 'jupyter-snowpark',10);
     # numb_lines is not supported in Python API
-    logs = s.get_service_logs("0","jupyter-snowpark")
+    logs = s.get_service_logs("0", "jupyter-snowpark")
     print(logs)
 
     # SHOW ENDPOINTS IN SERVICE JUPYTER_SNOWPARK_SERVICE;
     # Not supported in Python API
 
-    # --- After we make a change to our Jupyter notebook, we will suspend and resume the service and you can see that the changes we made in our Notebook are still there!
+    # --- After we make a change to our Jupyter notebook,
+    # --- we will suspend and resume the service
+    # --- and you can see that the changes we made in our Notebook are still there!
     # ALTER SERVICE CONTAINER_HOL_DB.PUBLIC.JUPYTER_SNOWPARK_SERVICE SUSPEND;
     s.suspend()
 
@@ -58,5 +58,3 @@ try:
 
 finally:
     connection_container_user_role.close()
-
-
