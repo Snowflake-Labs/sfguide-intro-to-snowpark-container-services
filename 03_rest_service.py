@@ -43,8 +43,7 @@ try:
     print(status)
 
     # CALL SYSTEM$GET_SERVICE_LOGS('CONTAINER_HOL_DB.PUBLIC.CONVERT_API', '0', 'convert-api',10);
-    # numb_lines is not supported in Python API
-    logs = s.get_service_logs("0", "convert-api")
+    logs = s.get_service_logs("0", "convert-api", 10)
     print(logs)
 
     # CREATE OR REPLACE TABLE WEATHER (
@@ -87,6 +86,28 @@ try:
         max_batch_rows=5
     ))
 
+    connection_container_user_role.cursor().execute("""INSERT INTO weather (DATE, LOCATION, TEMP_C, TEMP_F)
+                        VALUES 
+                            ('2023-03-21', 'London', 15, NULL),
+                            ('2023-07-13', 'Manchester', 20, NULL),
+                            ('2023-05-09', 'Liverpool', 17, NULL),
+                            ('2023-09-17', 'Cambridge', 19, NULL),
+                            ('2023-11-02', 'Oxford', 13, NULL),
+                            ('2023-01-25', 'Birmingham', 11, NULL),
+                            ('2023-08-30', 'Newcastle', 21, NULL),
+                            ('2023-06-15', 'Bristol', 16, NULL),
+                            ('2023-04-07', 'Leeds', 18, NULL),
+                            ('2023-10-23', 'Southampton', 12, NULL);""")
+
+
+    for (col1) in connection_container_user_role.cursor().execute("SELECT convert_udf(12) as conversion_result;"):
+        print('{0}'.format(col1))
+
+    connection_container_user_role.cursor().execute("""UPDATE WEATHER
+                    SET TEMP_F = convert_udf(TEMP_C);""")
+
+    for (col1, col2, col3, col4) in connection_container_user_role.cursor().execute("SELECT * FROM WEATHER;"):
+        print('{0} {1} {2} {3}'.format(col1, col2, col3, col4))
 
 finally:
     connection_container_user_role.close()

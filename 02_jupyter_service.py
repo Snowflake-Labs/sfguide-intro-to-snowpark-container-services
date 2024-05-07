@@ -40,8 +40,7 @@ try:
     print(status)
 
     # CALL SYSTEM$GET_SERVICE_LOGS('CONTAINER_HOL_DB.PUBLIC.JUPYTER_SNOWPARK_SERVICE', '0', 'jupyter-snowpark',10);
-    # numb_lines is not supported in Python API
-    logs = s.get_service_logs("0", "jupyter-snowpark")
+    logs = s.get_service_logs("0", "jupyter-snowpark", 10)
     print(logs)
 
     # SHOW ENDPOINTS IN SERVICE JUPYTER_SNOWPARK_SERVICE;
