@@ -71,7 +71,7 @@ try:
     # ENDPOINT='convert-api'   //The endpoint within the container
     # MAX_BATCH_ROWS=5         //limit the size of the batch
     # AS '/convert';           //The API endpoint
-    root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].functions.create(Function(
+    root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].functions.create_service_function(Function(
         name="convert_udf",
         arguments=[
                     FunctionArgument(name="input", datatype="float")
@@ -84,7 +84,7 @@ try:
                                 )
         ),
         max_batch_rows=5
-    ))
+    ), mode=CreateMode.or_replace)
 
     connection_container_user_role.cursor().execute("""INSERT INTO weather (DATE, LOCATION, TEMP_C, TEMP_F)
                         VALUES 

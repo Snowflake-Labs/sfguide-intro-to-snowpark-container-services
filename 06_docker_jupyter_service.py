@@ -90,6 +90,13 @@ try:
     # docker push <repository_url>/python-jupyter-snowpark:dev
     client.api.push(repository_url + '/python-jupyter-snowpark:dev')
 
+    # USE ROLE CONTAINER_USER_ROLE;
+    # CALL SYSTEM$REGISTRY_LIST_IMAGES('/CONTAINER_HOL_DB/PUBLIC/IMAGE_REPO');
+    images = root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].image_repositories["IMAGE_REPO"].listImagesInRepository()
+    for image in images:
+        print(image)
+
+
     # you can stop the container: `docker stop python-jupyter-snowpark`.
     container.stop()
 
