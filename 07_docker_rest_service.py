@@ -67,7 +67,7 @@ try:
 
     # Test running the image
     # docker run -d -p 9090:9090 <local_repository>/convert-api:latest
-    client.containers.run(image='<local_repository>/convert-api:latest', detach=True, ports={9090: 9090})
+    container = client.containers.run(image='<local_repository>/convert-api:latest', detach=True, ports={9090: 9090})
 
     # Use CURL to test the service
     # curl -X POST -H "Content-Type: application/json" -d '{"data": [[0, 12],[1,19],[2,18],[3,23]]}' http://localhost:9090/convert
@@ -78,7 +78,7 @@ try:
                 http://localhost:9090/convert """)
 
     # Grab the image
-    image = next(i for i in client.images.list() if "<local_repository>/convert-api:dev" in i.tags)
+    image = next(i for i in client.images.list() if "<local_repository>/convert-api:latest" in i.tags)
 
     # Tag it
     #  # e.g. if repository_url = org-account.registry.snowflakecomputing.com/container_hol_db/public/image_repo,
@@ -91,6 +91,9 @@ try:
     # Push the image to the remote registry
     # docker push <repository_url>/convert-api:dev
     client.api.push(repository_url + '/convert-api:dev')
+
+    # you can stop the container: `docker stop convert-api`.
+    container.stop()
 
 finally:
     connection_container_user_role.close()

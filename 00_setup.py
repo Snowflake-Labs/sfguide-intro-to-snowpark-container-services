@@ -55,7 +55,6 @@ try:
 
     # GRANT CREATE DATABASE ON ACCOUNT TO ROLE CONTAINER_USER_ROLE
     # GRANT CREATE WAREHOUSE ON ACCOUNT TO ROLE CONTAINER_USER_ROLE;
-    # GRANT CREATE WAREHOUSE ON ACCOUNT TO ROLE CONTAINER_USER_ROLE;
     # GRANT CREATE COMPUTE POOL ON ACCOUNT TO ROLE CONTAINER_USER_ROLE;
     # GRANT CREATE INTEGRATION ON ACCOUNT TO ROLE CONTAINER_USER_ROLE;
     # GRANT MONITOR USAGE ON ACCOUNT TO  ROLE  CONTAINER_USER_ROLE;
@@ -64,7 +63,6 @@ try:
         grantee=Grantees.role('CONTAINER_USER_ROLE'),
         securable=Securables.current_account,
         privileges=[Privileges.create_database,
-                    Privileges.create_warehouse,
                     Privileges.create_warehouse,
                     Privileges.create_compute_pool,
                     Privileges.create_integration,

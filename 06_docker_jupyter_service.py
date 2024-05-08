@@ -67,7 +67,7 @@ try:
 
     # Test running the image
     # docker run -d -p 8888:8888 <local_repository>/python-jupyter-snowpark:latest
-    client.containers.run(image='<local_repository>/python-jupyter-snowpark:latest', detach=True, ports={8888: 8888})
+    container = client.containers.run(image='<local_repository>/python-jupyter-snowpark:latest', detach=True, ports={8888: 8888})
 
     # Use CURL to test the service
     # Open up a browser and navigate to [localhost:8888/lab](http://localhost:8888/lab) to verify
@@ -76,7 +76,7 @@ try:
     os.system("""curl -X GET  http://localhost:8888/lab""")
 
     # Grab the image
-    image = next(i for i in client.images.list() if "<local_repository>/python-jupyter-snowpark:dev" in i.tags)
+    image = next(i for i in client.images.list() if "<local_repository>/python-jupyter-snowpark:latest" in i.tags)
 
     # Tag it
     #  # e.g. if repository_url = org-account.registry.snowflakecomputing.com/container_hol_db/public/image_repo,
@@ -89,6 +89,9 @@ try:
     # Push the image to the remote registry
     # docker push <repository_url>/python-jupyter-snowpark:dev
     client.api.push(repository_url + '/python-jupyter-snowpark:dev')
+
+    # you can stop the container: `docker stop python-jupyter-snowpark`.
+    container.stop()
 
 finally:
     connection_container_user_role.close()
