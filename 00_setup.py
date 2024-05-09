@@ -59,7 +59,7 @@ try:
     # GRANT CREATE INTEGRATION ON ACCOUNT TO ROLE CONTAINER_USER_ROLE;
     # GRANT MONITOR USAGE ON ACCOUNT TO  ROLE  CONTAINER_USER_ROLE;
     # GRANT BIND SERVICE ENDPOINT ON ACCOUNT TO ROLE CONTAINER_USER_ROLE;
-    root.grants.create(Grant(
+    root.grants.grant(Grant(
         grantee=Grantees.role('CONTAINER_USER_ROLE'),
         securable=Securables.current_account,
         privileges=[Privileges.create_database,
@@ -72,7 +72,7 @@ try:
     ))
 
     # GRANT IMPORTED PRIVILEGES ON DATABASE snowflake TO ROLE CONTAINER_USER_ROLE;
-    root.grants.create(Grant(
+    root.grants.grant(Grant(
         grantee=Grantees.role('CONTAINER_USER_ROLE'),
         securable=Securables.database('snowflake'),
         privileges=[Privileges.imported_privileges
@@ -80,7 +80,7 @@ try:
     ))
 
     # grant role CONTAINER_USER_ROLE to role ACCOUNTADMIN;
-    root.grants.create(Grant(
+    root.grants.grant(Grant(
         grantee=Grantees.role('ACCOUNTADMIN'),
         securable=Securables.role('CONTAINER_USER_ROLE'),
         privileges=[Privileges.usage],

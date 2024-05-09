@@ -60,7 +60,7 @@ try:
         ENABLED = true;""")
 
     # GRANT USAGE ON INTEGRATION ALLOW_ALL_EAI TO ROLE CONTAINER_USER_ROLE;
-    root.grants.create(Grant(
+    root.grants.grant(Grant(
         grantee=Grantees.role('CONTAINER_USER_ROLE'),
         securable=Securables.integration("ALLOW_ALL_EAI"),
         privileges=[Privileges.Usage]
