@@ -3,8 +3,6 @@
 import os
 
 from snowflake.core import Root
-from snowflake.core.service import Service, ServiceSpecStageFile
-
 from snowflake.connector import connect
 
 CONNECTION_PARAMETERS_CONTAINER_USER_ROLE = {

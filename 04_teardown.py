@@ -2,19 +2,6 @@
 import os
 
 from snowflake.core import Root
-
-from snowflake.core.stage import Stage
-
-from snowflake.core.grants import (
-    DeletionMode,
-    Grant,
-    Grantees,
-    Privileges,
-    Role,
-    Securables,
-    User,
-)
-
 from snowflake.connector import connect
 
 CONNECTION_PARAMETERS_ACCOUNT_ADMIN = {

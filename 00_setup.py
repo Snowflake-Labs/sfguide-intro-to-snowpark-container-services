@@ -30,16 +30,6 @@ CONNECTION_PARAMETERS_ACCOUNT_ADMIN = {
     "role": "ACCOUNTADMIN",
 }
 
-CONNECTION_PARAMETERS_CONTAINER_USER_ROLE= {
-    "account": os.environ["snowflake_account"],
-    "user": os.environ["snowflake_user"],
-    "password": os.environ["snowflake_password"],
-    "database": os.environ["snowflake_database"],
-    "schema": os.environ["snowflake_schema"],
-    "warehouse": os.environ["snowflake_warehouse"],
-    "role": "CONTAINER_USER_ROLE",
-}
-
 # create a SnowflakeConnection instance
 connection_acct_admin = connect(**CONNECTION_PARAMETERS_ACCOUNT_ADMIN)
 
@@ -86,12 +76,8 @@ try:
         privileges=[Privileges.usage],
     ))
 
-    # Connect as CONTANTAINER_USE_ROLE
-    connection_container_user_role = connect(**CONNECTION_PARAMETERS_CONTAINER_USER_ROLE)
-
-    # create a root as the entry point for all object
-    root = Root(connection_container_user_role)
-
+    # USE ROLE CONTANTAINER_USE_ROLE
+    root.session.use_role("CONTANTAINER_USE_ROLE")
 
     # CREATE OR REPLACE DATABASE CONTAINER_HOL_DB;
     root.databases.create(Database(
@@ -111,28 +97,23 @@ try:
         comment="This is a Container Quick Start Guide warehouse"
     ), mode=CreateMode.or_replace)
 
-    try:
-        # CREATE STAGE IF NOT EXISTS specs
-        # ENCRYPTION = (TYPE='SNOWFLAKE_SSE');
-        root.schemas[CONNECTION_PARAMETERS_CONTAINER_USER_ROLE.get("schema")].stages.create(
-            Stage(
-                name="specs",
-                encryption=Type(type=Types.SNOWFLAKE_SSE)
-        ))
+    # CREATE STAGE IF NOT EXISTS specs
+    # ENCRYPTION = (TYPE='SNOWFLAKE_SSE');
+    root.schemas[CONNECTION_PARAMETERS_ACCOUNT_ADMIN.get("schema")].stages.create(
+        Stage(
+            name="specs",
+            encryption=Type(type=Types.SNOWFLAKE_SSE)
+    ))
 
-        # CREATE STAGE IF NOT EXISTS volumes
-        # ENCRYPTION = (TYPE='SNOWFLAKE_SSE')
-        # DIRECTORY = (ENABLE = TRUE);
-        root.schemas[CONNECTION_PARAMETERS_CONTAINER_USER_ROLE.get("schema")].stages.create(
-            Stage(
-                name="volumes",
-                encryption=Type(type=Types.SNOWFLAKE_SSE),
-                directory=DIRECTORY_TABLE(enable="true")
-        ))
-
-    finally:
-        connection_container_user_role.close()
-
+    # CREATE STAGE IF NOT EXISTS volumes
+    # ENCRYPTION = (TYPE='SNOWFLAKE_SSE')
+    # DIRECTORY = (ENABLE = TRUE);
+    root.schemas[CONNECTION_PARAMETERS_ACCOUNT_ADMIN.get("schema")].stages.create(
+        Stage(
+            name="volumes",
+            encryption=Type(type=Types.SNOWFLAKE_SSE),
+            directory=DIRECTORY_TABLE(enable="true")
+    ))
     # create collection objects as the entry
 finally:
     connection_acct_admin.close()
