@@ -81,7 +81,7 @@ try:
           name="CONTAINER_HOL_POOL",
           min_nodes=1,
           max_nodes=1,
-          instance_family="CPU_X64_XS"
+          instance_family="CPU_X64_XS",
         ))
 
         # CREATE IMAGE REPOSITORY CONTAINER_HOL_DB.PUBLIC.IMAGE_REPO;
