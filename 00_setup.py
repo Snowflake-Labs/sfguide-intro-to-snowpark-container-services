@@ -8,14 +8,14 @@ from snowflake.core.warehouse import Warehouse
 from snowflake.core.stage import Stage
 
 from snowflake.core.grants import (
-    DeletionMode,
     Grant,
     Grantees,
     Privileges,
-    Role,
     Securables,
     User,
 )
+
+import from snowflake.core.role import Role
 from snowflake.core.database import Database
 
 from snowflake.connector import connect
@@ -72,8 +72,7 @@ try:
     # grant role CONTAINER_USER_ROLE to role ACCOUNTADMIN;
     root.grants.grant(Grant(
         grantee=Grantees.role('ACCOUNTADMIN'),
-        securable=Securables.role('CONTAINER_USER_ROLE'),
-        privileges=[Privileges.usage],
+        securable=Securables.role('CONTAINER_USER_ROLE')
     ))
 
     # USE ROLE CONTANTAINER_USE_ROLE
