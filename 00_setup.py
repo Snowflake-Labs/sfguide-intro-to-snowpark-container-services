@@ -5,7 +5,11 @@ import os
 from snowflake.core import Root
 from snowflake.core._common import CreateMode
 from snowflake.core.warehouse import Warehouse
-from snowflake.core.stage import Stage
+from snowflake.core.stage import (
+    Stage,
+    StageEncryption,
+    StageDirectoryTable,
+)
 
 from snowflake.core.grants import (
     Grant,
@@ -15,7 +19,7 @@ from snowflake.core.grants import (
     User,
 )
 
-import from snowflake.core.role import Role
+from snowflake.core.role import Role
 from snowflake.core.database import Database
 
 from snowflake.connector import connect
@@ -101,7 +105,7 @@ try:
     root.schemas[CONNECTION_PARAMETERS_ACCOUNT_ADMIN.get("schema")].stages.create(
         Stage(
             name="specs",
-            encryption=Type(type=Types.SNOWFLAKE_SSE)
+            encryption=StageEncryption(type="SNOWFLAKE_SSE")
     ))
 
     # CREATE STAGE IF NOT EXISTS volumes
@@ -110,8 +114,8 @@ try:
     root.schemas[CONNECTION_PARAMETERS_ACCOUNT_ADMIN.get("schema")].stages.create(
         Stage(
             name="volumes",
-            encryption=Type(type=Types.SNOWFLAKE_SSE),
-            directory=DIRECTORY_TABLE(enable="true")
+            encryption=StageEncryption(type="SNOWFLAKE_SSE"),
+            directory_table=StageDirectoryTable(enable="true")
     ))
     # create collection objects as the entry
 finally:
