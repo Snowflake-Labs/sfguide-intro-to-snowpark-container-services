@@ -5,7 +5,11 @@ from snowflake.core import Root
 from snowflake.core.service import Service, ServiceSpecStageFile
 from snowflake.core.table import Table, TableColumn
 from snowflake.core._common import CreateMode
-from snowflake.core.function import Function, FunctionArgument, ServiceFunctionParams
+from snowflake.core.function import (
+    Function,
+    FunctionArgument,
+    ServiceFunctionParams
+)
 
 from snowflake.connector import connect
 
