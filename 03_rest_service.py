@@ -5,9 +5,10 @@ from snowflake.core import Root
 from snowflake.core.service import Service, ServiceSpecStageFile
 from snowflake.core.table import Table, TableColumn
 from snowflake.core._common import CreateMode
+
 from snowflake.core.function import (
-    Function,
     FunctionArgument,
+    ServiceFunction
 )
 
 from snowflake.connector import connect
@@ -74,8 +75,8 @@ try:
     # ENDPOINT='convert-api'   //The endpoint within the container
     # MAX_BATCH_ROWS=5         //limit the size of the batch
     # AS '/convert';           //The API endpoint
-    root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].functions.create_service_function(
-        Function(
+    root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].functions.create(
+        ServiceFunction(
         name="convert_udf",
         arguments=[
             FunctionArgument(name="input", datatype="REAL")
