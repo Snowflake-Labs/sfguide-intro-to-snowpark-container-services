@@ -8,7 +8,6 @@ from snowflake.core._common import CreateMode
 from snowflake.core.function import (
     Function,
     FunctionArgument,
-    ServiceFunctionParams
 )
 
 from snowflake.connector import connect
@@ -75,20 +74,19 @@ try:
     # ENDPOINT='convert-api'   //The endpoint within the container
     # MAX_BATCH_ROWS=5         //limit the size of the batch
     # AS '/convert';           //The API endpoint
-    root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].functions.create_service_function(Function(
+    root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].functions.create_service_function(
+        Function(
         name="convert_udf",
         arguments=[
-                    FunctionArgument(name="input", datatype="float")
+            FunctionArgument(name="input", datatype="REAL")
         ],
-        returns="float",
-        service_function_params=(ServiceFunctionParams(
-                                    service="CONVERT_API",
-                                    endpoint="convert-api",
-                                    path="/convert"
-                                )
+        returns="REAL",
+        service="CONVERT_API",
+        endpoint="convert-api",
+        path="/convert",
+        max_batch_rows=5,
         ),
-        max_batch_rows=5
-    ), mode=CreateMode.or_replace)
+        mode=CreateMode.or_replace)
 
     connection_container_user_role.cursor().execute("""INSERT INTO weather (DATE, LOCATION, TEMP_C, TEMP_F)
                         VALUES 
@@ -103,9 +101,8 @@ try:
                             ('2023-04-07', 'Leeds', 18, NULL),
                             ('2023-10-23', 'Southampton', 12, NULL);""")
 
-
-    for (col1) in connection_container_user_role.cursor().execute("SELECT convert_udf(12) as conversion_result;"):
-        print('{0}'.format(col1))
+    f = root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].functions["convert_udf(REAL)"].execute_function([12])
+    print(f)
 
     connection_container_user_role.cursor().execute("""UPDATE WEATHER
                     SET TEMP_F = convert_udf(TEMP_C);""")
