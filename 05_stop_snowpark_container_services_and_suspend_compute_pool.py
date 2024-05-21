@@ -14,7 +14,7 @@ CONNECTION_PARAMETERS_CONTAINER_USER_ROLE = {
     "role": "CONTAINER_USER_ROLE",
 }
 
-# Connect as CONTANTAINER_USE_ROLE
+# Connect as CONTAINER_USER_ROLE
 connection_container_user_role = connect(**CONNECTION_PARAMETERS_CONTAINER_USER_ROLE)
 
 try:

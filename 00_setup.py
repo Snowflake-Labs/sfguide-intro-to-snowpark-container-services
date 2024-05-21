@@ -11,12 +11,11 @@ from snowflake.core.stage import (
     StageDirectoryTable,
 )
 
-from snowflake.core.grants import (
+from snowflake.core.grant import (
     Grant,
     Grantees,
     Privileges,
     Securables,
-    User,
 )
 
 from snowflake.core.role import Role
@@ -45,7 +44,7 @@ try:
     root.roles.create(Role(
         name='CONTAINER_USER_ROLE',
         comment='My role to use container',
-    ))
+    ), mode=CreateMode.or_replace)
 
     # GRANT CREATE DATABASE ON ACCOUNT TO ROLE CONTAINER_USER_ROLE
     # GRANT CREATE WAREHOUSE ON ACCOUNT TO ROLE CONTAINER_USER_ROLE;
@@ -80,7 +79,7 @@ try:
     ))
 
     # USE ROLE CONTANTAINER_USE_ROLE
-    root.session.use_role("CONTANTAINER_USE_ROLE")
+    root.session.use_role("CONTAINER_USER_ROLE")
 
     # CREATE OR REPLACE DATABASE CONTAINER_HOL_DB;
     root.databases.create(Database(

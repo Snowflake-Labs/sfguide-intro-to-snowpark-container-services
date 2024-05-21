@@ -5,15 +5,12 @@ from snowflake.core import Root
 from snowflake.core.compute_pool import ComputePool
 from snowflake.core.image_repository import ImageRepository
 
-from snowflake.core.grants import (
-    DeletionMode,
+from snowflake.core.grant import (
     Grant,
     Grantees,
     Privileges,
-    Role,
     Securables,
-    User,
-)
+ )
 
 from snowflake.connector import connect
 
@@ -52,11 +49,11 @@ try:
     root.grants.grant(Grant(
         grantee=Grantees.role('CONTAINER_USER_ROLE'),
         securable=Securables.integration("ALLOW_ALL_EAI"),
-        privileges=[Privileges.Usage]
+        privileges=[Privileges.usage]
     ))
 
-    # USE ROLE CONTANTAINER_USE_ROLE
-    root.session.use_role("CONTANTAINER_USE_ROLE")
+    # USE ROLE CONTAINER_USER_ROLE
+    root.session.use_role("CONTAINER_USER_ROLE")
 
     # CREATE COMPUTE POOL IF NOT EXISTS CONTAINER_HOL_POOL
     # MIN_NODES = 1
@@ -66,13 +63,13 @@ try:
       name="CONTAINER_HOL_POOL",
       min_nodes=1,
       max_nodes=1,
-      instance_family="STANDARD_1",
-    ))
+      instance_family="CPU_X64_XS",
+    ), mode="orReplace")
 
     # CREATE IMAGE REPOSITORY CONTAINER_HOL_DB.PUBLIC.IMAGE_REPO;
     root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].image_repositories.create(ImageRepository(
       name="IMAGE_REPO",
-    ))
+    ), mode="orReplace")
 
     # SHOW IMAGE REPOSITORIES IN SCHEMA CONTAINER_HOL_DB.PUBLIC;
     itr_data = root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].image_repositories.iter()

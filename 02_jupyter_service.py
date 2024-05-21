@@ -16,12 +16,15 @@ CONNECTION_PARAMETERS_CONTAINER_USER_ROLE = {
     "role": "CONTAINER_USER_ROLE",
 }
 
-# Connect as CONTANTAINER_USE_ROLE
+# Connect as CONTAINER_USER_ROLE
 connection_container_user_role = connect(**CONNECTION_PARAMETERS_CONTAINER_USER_ROLE)
 
 try:
     # create a root as the entry point for all object
     root = Root(connection_container_user_role)
+
+    root.session.use_database("CONTAINER_HOL_DB")
+    root.session.use_schema("PUBLIC")
 
     # create service CONTAINER_HOL_DB.PUBLIC.JUPYTER_SNOWPARK_SERVICE
     # in compute pool CONTAINER_HOL_POOL
@@ -31,9 +34,14 @@ try:
     s = root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].services.create(Service(
         name="JUPYTER_SNOWPARK_SERVICE",
         compute_pool="CONTAINER_HOL_POOL",
-        spec=ServiceSpecStageFile(stage="@specs", spec_file="jupyter-snowpark.yaml"),
+        spec=ServiceSpecStageFile(stage="specs", spec_file="jupyter-snowpark.yaml"),
         external_access_integrations=["ALLOW_ALL_EAI"],
     ))
+
+    # Workaround for stored proc returns JSON for Python API
+    #connection_container_user_role.cursor().execute("""alter session set UI_QUERY_RESULT_FORMAT = 'JSON'""")
+    #connection_container_user_role.cursor().execute("""alter session set
+    #    PYTHON_STORED_PROC_CHILD_JOB_RESULT_FORMAT = 'JSON'""")
 
     # CALL SYSTEM$GET_SERVICE_STATUS('CONTAINER_HOL_DB.PUBLIC.jupyter_snowpark_service');
     status = s.get_service_status()

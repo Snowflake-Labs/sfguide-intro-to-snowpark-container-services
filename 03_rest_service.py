@@ -23,12 +23,15 @@ CONNECTION_PARAMETERS_CONTAINER_USER_ROLE = {
     "role": "CONTAINER_USER_ROLE",
 }
 
-# Connect as CONTANTAINER_USE_ROLE
+# Connect as CONTAINER_USER_ROLE
 connection_container_user_role = connect(**CONNECTION_PARAMETERS_CONTAINER_USER_ROLE)
 
 try:
     # create a root as the entry point for all object
     root = Root(connection_container_user_role)
+
+    root.session.use_database("CONTAINER_HOL_DB")
+    root.session.use_schema("PUBLIC")
 
     # create service CONTAINER_HOL_DB.PUBLIC.convert_api
     #     in compute pool CONTAINER_HOL_POOL
@@ -38,9 +41,14 @@ try:
     s = root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].services.create(Service(
         name="convert_api",
         compute_pool="CONTAINER_HOL_POOL",
-        spec=ServiceSpecStageFile(stage="@specs", spec_file="convert-api.yaml"),
+        spec=ServiceSpecStageFile(stage="specs", spec_file="convert-api.yaml"),
         external_access_integrations=["ALLOW_ALL_EAI"],
     ))
+
+    # Workaround for stored proc returns JSON for Python API
+    #connection_container_user_role.cursor().execute("""alter session set UI_QUERY_RESULT_FORMAT = 'JSON'""")
+    #connection_container_user_role.cursor().execute("""alter session set
+    #    PYTHON_STORED_PROC_CHILD_JOB_RESULT_FORMAT = 'JSON'""")
 
     # CALL SYSTEM$GET_SERVICE_STATUS('CONTAINER_HOL_DB.PUBLIC.CONVERT-API');
     status = s.get_service_status()
@@ -83,7 +91,7 @@ try:
         ],
         returns="REAL",
         service="CONVERT_API",
-        endpoint="convert-api",
+        endpoint="'convert-api'",
         path="/convert",
         max_batch_rows=5,
         ),
@@ -102,14 +110,14 @@ try:
                             ('2023-04-07', 'Leeds', 18, NULL),
                             ('2023-10-23', 'Southampton', 12, NULL);""")
 
-    f = root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].functions["convert_udf(REAL)"].execute_function([12])
+    f = root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].functions["convert_udf(REAL)"].execute([12])
     print(f)
 
     connection_container_user_role.cursor().execute("""UPDATE WEATHER
                     SET TEMP_F = convert_udf(TEMP_C);""")
 
-    for (col1, col2, col3, col4) in connection_container_user_role.cursor().execute("SELECT * FROM WEATHER;"):
-        print('{0} {1} {2} {3}'.format(col1, col2, col3, col4))
+    for (col1, col2, col3, col4, col5) in connection_container_user_role.cursor().execute("SELECT *, convert_udf(TEMP_C) FROM WEATHER;"):
+        print('{0} {1} {2} {3}'.format(col1, col2, col3, col4, col5))
 
 finally:
     connection_container_user_role.close()
