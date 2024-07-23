@@ -11,13 +11,13 @@ from snowflake.core.stage import (
     StageDirectoryTable,
 )
 
-from snowflake.core.grants import (
+from snowflake.core.grant import (
     Grant,
     Grantees,
     Privileges,
     Securables,
-    User,
 )
+
 
 from snowflake.core.role import Role
 from snowflake.core.database import Database
