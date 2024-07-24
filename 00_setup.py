@@ -79,8 +79,8 @@ try:
         securable=Securables.role('CONTAINER_USER_ROLE')
     ))
 
-    # USE ROLE CONTANTAINER_USE_ROLE
-    root.session.use_role("CONTANTAINER_USE_ROLE")
+    # USE ROLE CONTAINER_USER_ROLE
+    root.session.use_role("CONTAINER_USER_ROLE")
 
     # CREATE OR REPLACE DATABASE CONTAINER_HOL_DB;
     root.databases.create(Database(
@@ -102,7 +102,7 @@ try:
 
     # CREATE STAGE IF NOT EXISTS specs
     # ENCRYPTION = (TYPE='SNOWFLAKE_SSE');
-    root.schemas[CONNECTION_PARAMETERS_ACCOUNT_ADMIN.get("schema")].stages.create(
+    root.databases['CONTAINER_HOL_DB'].schemas[CONNECTION_PARAMETERS_ACCOUNT_ADMIN.get("schema")].stages.create(
         Stage(
             name="specs",
             encryption=StageEncryption(type="SNOWFLAKE_SSE")
@@ -111,11 +111,11 @@ try:
     # CREATE STAGE IF NOT EXISTS volumes
     # ENCRYPTION = (TYPE='SNOWFLAKE_SSE')
     # DIRECTORY = (ENABLE = TRUE);
-    root.schemas[CONNECTION_PARAMETERS_ACCOUNT_ADMIN.get("schema")].stages.create(
+    root.databases['CONTAINER_HOL_DB'].schemas[CONNECTION_PARAMETERS_ACCOUNT_ADMIN.get("schema")].stages.create(
         Stage(
             name="volumes",
             encryption=StageEncryption(type="SNOWFLAKE_SSE"),
-            directory_table=StageDirectoryTable(enable="true")
+            directory_table=StageDirectoryTable(enable=True)
     ))
     # create collection objects as the entry
 finally:
