@@ -84,7 +84,7 @@ try:
     #   docker login <snowflake_registry_hostname> -u <user_name>
     #   > prompt for password
     #   docker tag <local_repository>/python-jupyter-snowpark:latest <repository_url>/python-jupyter-snowpark:dev
-    image.tag(repository_url, 'dev')
+    image.tag(f"{repository_url}/python-jupyter-snowpark", 'dev')
 
     # Push the image to the remote registry
     # docker push <repository_url>/python-jupyter-snowpark:dev
