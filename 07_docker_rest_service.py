@@ -56,7 +56,7 @@ try:
     # Build the Docker Image in the Example
     # cd .../sfguide-intro-to-snowpark-container-services/src/convert-api
     # docker build --platform=linux/amd64 -t <local_repository>/convert-api:latest .
-    client.images.build(path='sfguide-intro-to-snowpark-container-services/src/convert-api', platform='linux/aarch64', tag='<local_repository>/convert-api:latest')
+    client.images.build(path='sfguide-intro-to-snowpark-container-services/src/convert-api', platform='linux/amd64', tag='<local_repository>/convert-api:latest')
 
     # Check to see if the image is there
     # Verify the image built successfully:
@@ -84,7 +84,7 @@ try:
     #   docker login <snowflake_registry_hostname> -u <user_name>
     #   > prompt for password
     #  docker tag <local_repository>/convert-api:latest <repository_url>/convert-api:dev
-    image.tag(repository_url, 'dev')
+    image.tag(f"{repository_url}/convert-api", 'dev')
 
     # Push the image to the remote registry
     # docker push <repository_url>/convert-api:dev

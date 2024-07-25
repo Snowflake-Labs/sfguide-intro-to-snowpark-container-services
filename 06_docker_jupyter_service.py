@@ -58,7 +58,7 @@ try:
     # Build the Docker Image in the Example
     # cd .../sfguide-intro-to-snowpark-container-services/src/jupyter-snowpark
     # docker build --platform=linux/amd64 -t <local_repository>/python-jupyter-snowpark:latest .
-    client.images.build(path='sfguide-intro-to-snowpark-container-services/src/jupyter-snowpark', platform='linux/aarch64', tag='<local_repository>/python-jupyter-snowpark:latest')
+    client.images.build(path='sfguide-intro-to-snowpark-container-services/src/jupyter-snowpark', platform='linux/amd64', tag='<local_repository>/python-jupyter-snowpark:latest')
 
     # Check to see if the image is there
     # Verify the image built successfully:
