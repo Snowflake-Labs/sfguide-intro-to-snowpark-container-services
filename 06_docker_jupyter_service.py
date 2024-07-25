@@ -92,7 +92,7 @@ try:
 
     # USE ROLE CONTAINER_USER_ROLE;
     # CALL SYSTEM$REGISTRY_LIST_IMAGES('/CONTAINER_HOL_DB/PUBLIC/IMAGE_REPO');
-    images = root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].image_repositories["IMAGE_REPO"].listImagesInRepository()
+    images = root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].image_repositories["IMAGE_REPO"].list_images_in_repository()
     for image in images:
         print(image)
 
