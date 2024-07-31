@@ -2,14 +2,10 @@
 import os
 
 from snowflake.core import Root
+from snowflake.core._common import CreateMode
 from snowflake.core.service import Service, ServiceSpecStageFile
 from snowflake.core.table import Table, TableColumn
-from snowflake.core._common import CreateMode
-from snowflake.core.function import (
-    Function,
-    FunctionArgument,
-    ServiceFunctionParams
-)
+from snowflake.core.function import FunctionArgument, ServiceFunction
 
 from snowflake.connector import connect
 
@@ -35,12 +31,19 @@ try:
     #     from @specs
     #     specification_file='convert-api.yaml'
     #     external_access_integrations = (ALLOW_ALL_EAI);
-    s = root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].services.create(Service(
-        name="convert_api",
-        compute_pool="CONTAINER_HOL_POOL",
-        spec=ServiceSpecStageFile(stage="@specs", spec_file="convert-api.yaml"),
-        external_access_integrations=["ALLOW_ALL_EAI"],
-    ))
+    s = (
+        root.databases["CONTAINER_HOL_DB"]
+        .schemas["PUBLIC"]
+        .services.create(
+            Service(
+                name="convert_api",
+                compute_pool="CONTAINER_HOL_POOL",
+                spec=ServiceSpecStageFile(stage="specs", spec_file="convert-api.yaml"),
+                external_access_integrations=["ALLOW_ALL_EAI"],
+            ),
+            mode=CreateMode.if_not_exists,
+        )
+    )
 
     # CALL SYSTEM$GET_SERVICE_STATUS('CONTAINER_HOL_DB.PUBLIC.CONVERT-API');
     status = s.get_service_status()
@@ -60,13 +63,13 @@ try:
         Table(
             name="WEATHER",
             columns=[
-                    TableColumn(name="DATE", datatype="DATE"),
-                    TableColumn(name="LOCATION", datatype="VARCHAR"),
-                    TableColumn(name="TEMP_C", datatype="NUMBER"),
-                    TableColumn(name="TEMP_F", datatype="NUMBER"),
-                ],
+                TableColumn(name="DATE", datatype="DATE"),
+                TableColumn(name="LOCATION", datatype="VARCHAR"),
+                TableColumn(name="TEMP_C", datatype="NUMBER"),
+                TableColumn(name="TEMP_F", datatype="NUMBER"),
+            ],
         ),
-        mode=CreateMode.or_replace
+        mode=CreateMode.or_replace,
     )
 
     # CREATE OR REPLACE FUNCTION convert_udf (input float)
@@ -75,20 +78,18 @@ try:
     # ENDPOINT='convert-api'   //The endpoint within the container
     # MAX_BATCH_ROWS=5         //limit the size of the batch
     # AS '/convert';           //The API endpoint
-    root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].functions.create_service_function(Function(
-        name="convert_udf",
-        arguments=[
-                    FunctionArgument(name="input", datatype="float")
-        ],
-        returns="float",
-        service_function_params=(ServiceFunctionParams(
-                                    service="CONVERT_API",
-                                    endpoint="convert-api",
-                                    path="/convert"
-                                )
+    root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].functions.create(
+        ServiceFunction(
+            name="convert_udf",
+            arguments=[FunctionArgument(name="input", datatype="REAL")],
+            returns="REAL",
+            service="CONVERT_API",
+            endpoint="convert-api",
+            path="/convert",
+            max_batch_rows=5,
         ),
-        max_batch_rows=5
-    ), mode=CreateMode.or_replace)
+        mode=CreateMode.or_replace,
+    )
 
     connection_container_user_role.cursor().execute("""INSERT INTO weather (DATE, LOCATION, TEMP_C, TEMP_F)
                         VALUES 
@@ -103,16 +104,18 @@ try:
                             ('2023-04-07', 'Leeds', 18, NULL),
                             ('2023-10-23', 'Southampton', 12, NULL);""")
 
-
-    for (col1) in connection_container_user_role.cursor().execute("SELECT convert_udf(12) as conversion_result;"):
-        print('{0}'.format(col1))
+    for col1 in connection_container_user_role.cursor().execute(
+        "SELECT convert_udf(12) as conversion_result;"
+    ):
+        print("{0}".format(col1))
 
     connection_container_user_role.cursor().execute("""UPDATE WEATHER
                     SET TEMP_F = convert_udf(TEMP_C);""")
 
-    for (col1, col2, col3, col4) in connection_container_user_role.cursor().execute("SELECT * FROM WEATHER;"):
-        print('{0} {1} {2} {3}'.format(col1, col2, col3, col4))
+    for col1, col2, col3, col4 in connection_container_user_role.cursor().execute(
+        "SELECT * FROM WEATHER;"
+    ):
+        print("{0} {1} {2} {3}".format(col1, col2, col3, col4))
 
 finally:
     connection_container_user_role.close()
-

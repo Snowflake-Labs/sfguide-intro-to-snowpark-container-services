@@ -58,7 +58,7 @@ try:
     # Build the Docker Image in the Example
     # cd .../sfguide-intro-to-snowpark-container-services/src/jupyter-snowpark
     # docker build --platform=linux/amd64 -t <local_repository>/python-jupyter-snowpark:latest .
-    client.images.build(path='sfguide-intro-to-snowpark-container-services/src/jupyter-snowpark', platform='linux/aarch64', tag='<local_repository>/python-jupyter-snowpark:latest')
+    client.images.build(path='sfguide-intro-to-snowpark-container-services/src/jupyter-snowpark', platform='linux/amd64', tag='<local_repository>/python-jupyter-snowpark:latest')
 
     # Check to see if the image is there
     # Verify the image built successfully:
@@ -84,7 +84,7 @@ try:
     #   docker login <snowflake_registry_hostname> -u <user_name>
     #   > prompt for password
     #   docker tag <local_repository>/python-jupyter-snowpark:latest <repository_url>/python-jupyter-snowpark:dev
-    image.tag(repository_url, 'dev')
+    image.tag(f"{repository_url}/python-jupyter-snowpark", 'dev')
 
     # Push the image to the remote registry
     # docker push <repository_url>/python-jupyter-snowpark:dev
@@ -92,7 +92,7 @@ try:
 
     # USE ROLE CONTAINER_USER_ROLE;
     # CALL SYSTEM$REGISTRY_LIST_IMAGES('/CONTAINER_HOL_DB/PUBLIC/IMAGE_REPO');
-    images = root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].image_repositories["IMAGE_REPO"].listImagesInRepository()
+    images = root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].image_repositories["IMAGE_REPO"].list_images_in_repository()
     for image in images:
         print(image)
 

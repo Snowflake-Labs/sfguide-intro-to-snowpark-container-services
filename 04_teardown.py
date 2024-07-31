@@ -37,12 +37,6 @@ try:
     # ALTER COMPUTE POOL CONTAINER_HOL_POOL SUSPEND;
     root.compute_pools["CONTAINER_HOL_POOL"].suspend()
 
-    # DROP SERVICE CONTAINER_HOL_DB.PUBLIC.JUPYTER_SNOWPARK_SERVICE;
-    root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].services["JUPYTER_SNOWPARK_SERVICE"].delete()
-
-    # DROP SERVICE CONTAINER_HOL_DB.PUBLIC.CONVERT_API;
-    root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].services["CONVERT_API"].delete()
-
     # DROP COMPUTE POOL CONTAINER_HOL_POOL;
     root.compute_pools["CONTAINER_HOL_POOL"].delete()
 

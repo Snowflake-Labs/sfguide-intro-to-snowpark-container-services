@@ -2,6 +2,7 @@
 import os
 
 from snowflake.core import Root
+from snowflake.core._common import CreateMode
 from snowflake.core.service import Service, ServiceSpecStageFile
 
 from snowflake.connector import connect
@@ -28,12 +29,21 @@ try:
     # from @specs
     # specification_file='jupyter-snowpark.yaml'
     # external_access_integrations = (ALLOW_ALL_EAI);
-    s = root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].services.create(Service(
-        name="JUPYTER_SNOWPARK_SERVICE",
-        compute_pool="CONTAINER_HOL_POOL",
-        spec=ServiceSpecStageFile(stage="@specs", spec_file="jupyter-snowpark.yaml"),
-        external_access_integrations=["ALLOW_ALL_EAI"],
-    ))
+    s = (
+        root.databases["CONTAINER_HOL_DB"]
+        .schemas["PUBLIC"]
+        .services.create(
+            Service(
+                name="JUPYTER_SNOWPARK_SERVICE",
+                compute_pool="CONTAINER_HOL_POOL",
+                spec=ServiceSpecStageFile(
+                    stage="specs", spec_file="jupyter-snowpark.yaml"
+                ),
+                external_access_integrations=["ALLOW_ALL_EAI"],
+            ),
+            mode=CreateMode.if_not_exists,
+        )
+    )
 
     # CALL SYSTEM$GET_SERVICE_STATUS('CONTAINER_HOL_DB.PUBLIC.jupyter_snowpark_service');
     status = s.get_service_status()

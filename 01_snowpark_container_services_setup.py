@@ -5,14 +5,11 @@ from snowflake.core import Root
 from snowflake.core.compute_pool import ComputePool
 from snowflake.core.image_repository import ImageRepository
 
-from snowflake.core.grants import (
-    DeletionMode,
+from snowflake.core.grant import (
     Grant,
     Grantees,
     Privileges,
-    Role,
     Securables,
-    User,
 )
 
 from snowflake.connector import connect
@@ -44,7 +41,7 @@ try:
         MODE = 'EGRESS'
         VALUE_LIST= ('0.0.0.0:443', '0.0.0.0:80');""")
 
-    connection_acct_admin.cursor().execute("""CREATE EXTERNAL ACCESS INTEGRATION ALLOW_ALL_EAI
+    connection_acct_admin.cursor().execute("""CREATE OR REPLACE EXTERNAL ACCESS INTEGRATION ALLOW_ALL_EAI
         ALLOWED_NETWORK_RULES = (ALLOW_ALL_RULE)
         ENABLED = true;""")
 
@@ -52,21 +49,21 @@ try:
     root.grants.grant(Grant(
         grantee=Grantees.role('CONTAINER_USER_ROLE'),
         securable=Securables.integration("ALLOW_ALL_EAI"),
-        privileges=[Privileges.Usage]
+        privileges=[Privileges.usage]
     ))
 
-    # USE ROLE CONTANTAINER_USE_ROLE
-    root.session.use_role("CONTANTAINER_USE_ROLE")
+    # USE ROLE CONTAINER_USER_ROLE
+    root.session.use_role("CONTAINER_USER_ROLE")
 
     # CREATE COMPUTE POOL IF NOT EXISTS CONTAINER_HOL_POOL
     # MIN_NODES = 1
     # MAX_NODES = 1
-    # INSTANCE_FAMILY = standard_1;
+    # INSTANCE_FAMILY = CPU_X64_XS;
     root.compute_pools.create(ComputePool(
       name="CONTAINER_HOL_POOL",
       min_nodes=1,
       max_nodes=1,
-      instance_family="STANDARD_1",
+      instance_family="CPU_X64_XS",
     ))
 
     # CREATE IMAGE REPOSITORY CONTAINER_HOL_DB.PUBLIC.IMAGE_REPO;
