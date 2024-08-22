@@ -31,11 +31,6 @@ try:
     # create a root as the entry point for all object
     root = Root(connection_acct_admin)
 
-    connection_acct_admin.cursor().execute("""CREATE SECURITY INTEGRATION IF NOT EXISTS snowservices_ingress_oauth
-        TYPE=oauth
-        OAUTH_CLIENT=snowservices_ingress
-        ENABLED=true;""")
-
     connection_acct_admin.cursor().execute("""CREATE OR REPLACE NETWORK RULE ALLOW_ALL_RULE
         TYPE = 'HOST_PORT'
         MODE = 'EGRESS'
