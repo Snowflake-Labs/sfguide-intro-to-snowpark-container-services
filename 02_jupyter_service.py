@@ -45,9 +45,10 @@ try:
         )
     )
 
-    # CALL SYSTEM$GET_SERVICE_STATUS('CONTAINER_HOL_DB.PUBLIC.jupyter_snowpark_service');
-    status = s.get_service_status()
-    print(status)
+    # SHOW SERVICE CONTAINERS IN SERVICE JUPYTER_SNOWPARK_SERVICE;
+    containers = s.get_containers()
+    for container in containers:
+        print(container.service_status)
 
     # CALL SYSTEM$GET_SERVICE_LOGS('CONTAINER_HOL_DB.PUBLIC.JUPYTER_SNOWPARK_SERVICE', '0', 'jupyter-snowpark',10);
     logs = s.get_service_logs("0", "jupyter-snowpark", 10)
