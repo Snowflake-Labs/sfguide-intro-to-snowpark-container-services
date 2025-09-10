@@ -91,7 +91,7 @@ try:
     client.api.push(repository_url + '/python-jupyter-snowpark:dev')
 
     # USE ROLE CONTAINER_USER_ROLE;
-    # CALL SYSTEM$REGISTRY_LIST_IMAGES('/CONTAINER_HOL_DB/PUBLIC/IMAGE_REPO');
+    # SHOW IMAGES IN IMAGE REPOSITORY IMAGE_REPO;
     images = root.databases["CONTAINER_HOL_DB"].schemas["PUBLIC"].image_repositories["IMAGE_REPO"].list_images_in_repository()
     for image in images:
         print(image)

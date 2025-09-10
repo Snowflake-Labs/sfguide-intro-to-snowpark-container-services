@@ -45,9 +45,10 @@ try:
         )
     )
 
-    # CALL SYSTEM$GET_SERVICE_STATUS('CONTAINER_HOL_DB.PUBLIC.CONVERT-API');
-    status = s.get_service_status()
-    print(status)
+    # SHOW SERVICE CONTAINERS IN SERVICE CONVERT_API;
+    containers = s.get_containers()
+    for container in containers:
+        print(container.service_status)
 
     # CALL SYSTEM$GET_SERVICE_LOGS('CONTAINER_HOL_DB.PUBLIC.CONVERT_API', '0', 'convert-api',10);
     logs = s.get_service_logs("0", "convert-api", 10)
